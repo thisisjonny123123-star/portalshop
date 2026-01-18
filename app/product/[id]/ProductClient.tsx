@@ -1,7 +1,26 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 export default function ProductClient({ product }: any) {
-  const image = product.images?.split(",")[0] || "";
+  const images: string[] = product.images || [];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [images]);
+
+  const next = () => setIndex((prev) => (prev + 1) % images.length);
+  const prev = () =>
+    setIndex((prev) => (prev - 1 + images.length) % images.length);
+
+  const mainImage = images[index] || null;
 
   return (
     <main
@@ -15,16 +34,63 @@ export default function ProductClient({ product }: any) {
         alignItems: "flex-start",
       }}
     >
-      <img
-        src={image}
-        style={{
-          width: 400,
-          height: 400,
-          objectFit: "cover",
-          borderRadius: 12,
-          boxShadow: "0 0 40px rgba(168, 85, 247, 0.4)",
-        }}
-      />
+      <div style={{ position: "relative" }}>
+        {mainImage && (
+          <img
+            src={mainImage}
+            style={{
+              width: 400,
+              height: 400,
+              objectFit: "contain",
+              background: "#111",
+              borderRadius: 12,
+              display: "block",
+            }}
+          />
+        )}
+
+        <button
+          onClick={prev}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: -50,
+            transform: "translateY(-50%)",
+            width: 40,
+            height: 40,
+            background: "#7e22ce",
+            border: "none",
+            borderRadius: 8,
+            cursor: "pointer",
+            color: "#000",
+            fontSize: 20,
+            fontWeight: "bold",
+          }}
+        >
+          ←
+        </button>
+
+        <button
+          onClick={next}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: -50,
+            transform: "translateY(-50%)",
+            width: 40,
+            height: 40,
+            background: "#7e22ce",
+            border: "none",
+            borderRadius: 8,
+            cursor: "pointer",
+            color: "#000",
+            fontSize: 20,
+            fontWeight: "bold",
+          }}
+        >
+          →
+        </button>
+      </div>
 
       <div style={{ maxWidth: 500 }}>
         <h1
@@ -59,31 +125,6 @@ export default function ProductClient({ product }: any) {
         >
           {product.description}
         </p>
-
-        <button
-          style={{
-            padding: "14px 28px",
-            background: "linear-gradient(90deg, #a855f7, #7e22ce)",
-            border: "none",
-            borderRadius: 8,
-            cursor: "pointer",
-            fontSize: 18,
-            fontWeight: 600,
-            color: "#fff",
-            transition: "transform 0.2s ease, box-shadow 0.2s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.05)";
-            e.currentTarget.style.boxShadow =
-              "0 0 25px rgba(168, 85, 247, 0.6)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
-            e.currentTarget.style.boxShadow = "none";
-          }}
-        >
-          Add to Cart
-        </button>
       </div>
     </main>
   );
