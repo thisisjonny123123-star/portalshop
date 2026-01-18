@@ -62,4 +62,6 @@ export default function AdminPage() {
       </form>
     </div>
   );
+export default function Test() {
+  return <div style={{ color: "white" }}>THIS IS THE REAL HOMEPAGE</div>;
 }
