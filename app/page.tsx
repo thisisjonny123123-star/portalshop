@@ -1,5 +1,6 @@
 import ProductCard from "../components/ProductCard";
 import { createClient } from "@supabase/supabase-js";
+console.log("DEPLOYMENT TEST — HOMEPAGE LOADED");
 
 export default async function Home() {
   const supabase = createClient(
